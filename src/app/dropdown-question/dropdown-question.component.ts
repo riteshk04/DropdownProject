@@ -161,7 +161,7 @@ export class DropdownQuestionComponent {
           ],
           width: 200,
           height: 32,
-          correct: 0,
+          correct: -1,
           open: false,
         });
       });

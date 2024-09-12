@@ -22,7 +22,10 @@
         <i class="fa fa-unlock"></i>
         Unlock
       </button>
-      <button class="" (click)="onSaveAndPreview()">
+      <button
+        class="{{ question | validationpipe }}"
+        (click)="onSaveAndPreview()"
+      >
         <i class="fa fa-eye"></i>
         Save and preview
       </button>
@@ -155,7 +158,9 @@
   </div>
   <div class="dropdown-container">
     <div class="dropdown-header" (click)="toggleFeedbackDropdown()">
-      <div class="dropdown-title dropdown-title-small">ADD FEEDBACK</div>
+      <div class="dropdown-title dropdown-title-small">
+        {{ feedbackDropdownOpen ? "Remove Feedback" : "Show Feedback" }}
+      </div>
     </div>
     <div class="dropdown-body feedback-form" *ngIf="feedbackDropdownOpen">
       <div class="helper-text">Feedback for all correct responses</div>

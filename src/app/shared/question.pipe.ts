@@ -21,6 +21,7 @@ export class ValidationPipe implements PipeTransform {
     question.tokens.length > 0 ? {} : (valid = false);
 
     question.tokens.forEach((token) => {
+      token.correct > 0 ? {} : (valid = false);
       token.options.length > 0 ? {} : (valid = false);
       token.options.forEach((opt) => {
         opt.text.trim().length > 0 ? {} : (valid = false);

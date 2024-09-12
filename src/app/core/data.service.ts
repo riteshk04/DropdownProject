@@ -9,10 +9,52 @@ export class DataService {
   constructor(private http: HttpClient) {}
 
   getQuestions(): Observable<IQuestion[]> {
-    return this.http.get<IQuestion[]>(`assets/questions.json`);
+    const questions = localStorage.getItem('questions');
+
+    if (questions) {
+      return new Observable((observer) => {
+        observer.next(JSON.parse(questions));
+        observer.complete();
+      });
+    } else {
+      return new Observable((observer) => {
+        observer.next([]);
+        observer.complete();
+      });
+    }
   }
 
   saveQuestion(question: IQuestion): Observable<IQuestion> {
-    return this.http.post<IQuestion>(`assets/questions.json`, question);
+    const questions = localStorage.getItem('questions');
+    if (questions) {
+      const parsedQuestions = JSON.parse(questions);
+      if (parsedQuestions.some((q: IQuestion) => q.id === question.id)) {
+        // update question
+        const index = parsedQuestions.findIndex(
+          (q: IQuestion) => q.id === question.id
+        );
+        parsedQuestions[index] = question;
+        localStorage.setItem('questions', JSON.stringify(parsedQuestions));
+        return new Observable((observer) => {
+          observer.next(question);
+          observer.complete();
+        });
+      } else {
+        // add new question
+        parsedQuestions.push(question);
+        localStorage.setItem('questions', JSON.stringify(parsedQuestions));
+        return new Observable((observer) => {
+          observer.next(question);
+          observer.complete();
+        });
+      }
+    } else {
+      localStorage.setItem('questions', JSON.stringify([question]));
+    }
+
+    return new Observable((observer) => {
+      observer.next(question);
+      observer.complete();
+    });
   }
 }
