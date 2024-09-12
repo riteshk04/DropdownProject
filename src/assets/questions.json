@@ -15,11 +15,35 @@
     "tokens": [
       {
         "id": 1,
-        "text": "token"
+        "text": "token",
+        "options": [
+          {
+            "id": 1,
+            "text": "",
+            "order": 1
+          },
+          {
+            "id": 2,
+            "text": "",
+            "order": 2
+          }
+        ]
       },
       {
         "id": 2,
-        "text": "token"
+        "text": "token",
+        "options": [
+          {
+            "id": 1,
+            "text": "",
+            "order": 1
+          },
+          {
+            "id": 2,
+            "text": "",
+            "order": 2
+          }
+        ]
       }
     ],
     "feedback": {

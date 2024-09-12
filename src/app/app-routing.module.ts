@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DropdownQuestionComponent } from './dropdown-question/dropdown-question.component';
+import { QuestionPreviewComponent } from './dropdown-question/question-preview/question-preview.component';
 
 const routes: Routes = [
   {
@@ -9,8 +10,12 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'question',
+    path: 'question/:questionId',
     component: DropdownQuestionComponent,
+  },
+  {
+    path: 'question/:questionId/preview',
+    component: QuestionPreviewComponent,
   },
 ];
 

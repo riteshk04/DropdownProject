@@ -9,10 +9,10 @@ export class DataService {
   constructor(private http: HttpClient) {}
 
   getQuestions(): Observable<IQuestion[]> {
-    return this.http.get<IQuestion[]>('/assets/questions.json').pipe();
+    return this.http.get<IQuestion[]>(`assets/questions.json`);
   }
 
-  getNewQuestions(): Observable<IQuestion> {
-    return this.http.get<IQuestion>('/assets/new-question.json').pipe();
+  saveQuestion(question: IQuestion): Observable<IQuestion> {
+    return this.http.post<IQuestion>(`assets/questions.json`, question);
   }
 }

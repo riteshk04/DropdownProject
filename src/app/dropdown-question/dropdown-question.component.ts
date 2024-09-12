@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { DataService } from '../core/data.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-dropdown-question',
@@ -22,15 +23,26 @@ export class DropdownQuestionComponent {
     },
   };
 
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   /**
    * Initializes the component by fetching questions and new question from the data service
    * and storing them in the component's questions array.
    */
   ngOnInit(): void {
+    const id =
+      parseInt(this.route.snapshot.paramMap.get('questionId') || '') || 0;
+
     this.dataService.getQuestions().subscribe((data) => {
-      this.question = data[0];
+      if (!data.some((q) => q.id === id)) {
+        this.router.navigate(['/question/new']);
+      }
+      this.question = data.find((q) => q.id === id) || this.question;
+      this.onBlurQuestion(this.question.question);
     });
   }
 
@@ -40,6 +52,26 @@ export class DropdownQuestionComponent {
 
   toggleSetPropertiesDropdown() {
     this.setPropertiesDropdownOpen = !this.setPropertiesDropdownOpen;
+  }
+
+  onSaveAndPreview() {
+    this.question.tokens.forEach((token) => {
+      token.options.forEach((opt) => {
+        if (opt.text.trim().length < 1) {
+          opt.error = 'Please enter an option';
+        } else {
+          opt.error = undefined;
+        }
+      });
+    });
+
+    if (this.question.question.trim().length < 1) {
+      this.questionTitleHTML = 'Please enter a question';
+      return;
+    }
+    this.questionTitleHTML = '';
+    this.dataService.saveQuestion(this.question);
+    window.open(`/question/${this.question.id}/preview`, '_blank');
   }
 
   // Question

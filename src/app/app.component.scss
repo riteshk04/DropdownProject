@@ -1,0 +1,57 @@
+$primary: #25313f;
+$secondary: #3fd28b;
+$sky: #31b9e4;
+$sky-light: #e2f8fe;
+$primary-light: #3c4e62;
+$dim: #eeeeee;
+$gray: #666666;
+$gray-light: #7e7e7e;
+
+.dropdown-page {
+  background-color: $dim;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $primary;
+    padding: 0 20px;
+    border-bottom: 4px solid #31b9e4;
+
+    .nav-links {
+      display: flex;
+
+      a {
+        color: $secondary;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: small;
+        align-content: center;
+        padding: 18px 18px;
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+
+        &:hover {
+          color: white;
+          font-weight: bold;
+          border-bottom: 4px solid white;
+        }
+      }
+      .avatar-wrapper {
+        align-content: center;
+        .avatar {
+          background-color: $primary-light;
+          color: white;
+          border-radius: 50%;
+          padding: 10px;
+          font-size: 18px;
+          margin-left: 10px;
+          border: 2px solid $secondary;
+        }
+      }
+    }
+  }
+}

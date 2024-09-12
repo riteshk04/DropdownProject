@@ -1,204 +1,184 @@
-<div class="dropdown-page">
-  <nav class="navbar">
-    <img src="/assets/logo.PNG" alt="" />
-    <div class="nav-links">
-      <a href="#content" class="active">Content</a>
-      <a href="#users">Users</a>
-      <a href="#admin">Admin</a>
-      <div class="avatar-wrapper">
-        <div class="avatar">PA</div>
-      </div>
+<header class="header">
+  <div class="arrow-left">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+  </div>
+  <div class="title">Create New Question</div>
+  <div class="btn-group">
+    <button class="">Cancel</button>
+    <button class="{{ question | validationpipe }} ">Publish</button>
+    <button class="">
+      Save
+      <i class="fa fa-chevron-down" aria-hidden="true"></i>
+    </button>
+  </div>
+</header>
+<main class="main">
+  <div class="content-header">
+    <div class="content-title">
+      Dropdown <small class="text-muted">(Locked)</small>
     </div>
-  </nav>
-  <header class="header">
-    <div class="arrow-left">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    </div>
-    <div class="title">Create New Question</div>
-    <div class="btn-group">
-      <button class="">Cancel</button>
-      <button class="{{ question | validationpipe }} ">Publish</button>
-      <button class="">
-        Save
-        <i class="fa fa-chevron-down" aria-hidden="true"></i>
+    <div class="content-options">
+      <button>
+        <i class="fa fa-unlock"></i>
+        Unlock
+      </button>
+      <button class="" (click)="onSaveAndPreview()">
+        <i class="fa fa-eye"></i>
+        Save and preview
       </button>
     </div>
-  </header>
-  <main class="main">
-    <div class="content-header">
-      <div class="content-title">
-        Dropdown <small class="text-muted">(Locked)</small>
-      </div>
-      <div class="content-options">
-        <button>
-          <i class="fa fa-unlock"></i>
-          Unlock
-        </button>
-        <button class="">
-          <i class="fa fa-eye"></i>
-          Save and preview
-        </button>
-      </div>
+  </div>
+  <div class="content-status">
+    <div class="status">
+      <span class="icon-wrapper">
+        <i class="fa fa-pencil"></i>
+      </span>
+      <span class="status-title">Question Properties</span>
     </div>
-    <div class="content-status">
-      <div class="status">
-        <span class="icon-wrapper">
-          <i class="fa fa-pencil"></i>
-        </span>
-        <span class="status-title">Question Properties</span>
-      </div>
-      <div class="line">
-        <hr />
-      </div>
-      <div class="status">
-        <span class="icon-wrapper"> 2 </span>
-        <span class="status-title">Question Content</span>
-      </div>
+    <div class="line">
+      <hr />
     </div>
-    <div class="container">
-      <div class="question">
-        <div class="question-title">
-          <div class="helper-text">Question (Stem)*</div>
-          <div
-            class="question-input"
-            contenteditable="plaintext-only"
-            (input)="onChangeQuestion($event)"
-            (blur)="onBlurQuestion($event)"
-            (focus)="onFocusQuestion($event)"
-            [innerHTML]="questionTitleHTML"
-          ></div>
-        </div>
+    <div class="status">
+      <span class="icon-wrapper"> 2 </span>
+      <span class="status-title">Question Content</span>
+    </div>
+  </div>
+  <div class="container">
+    <div class="question">
+      <div class="question-title">
+        <div class="helper-text">Question (Stem)*</div>
         <div
-          class="answer-choices {{
-            question.question !== '' ? '' : 'disabled'
-          }}"
-        >
-          <div class="helper-text bold">Answer Choices*</div>
-          <div class="tokens">
-            <div class="token" *ngFor="let token of question.tokens">
-              <div class="helper-text">{{ token.title }}*</div>
-              <div class="options">
-                <div class="option" *ngFor="let option of token.options">
-                  <div class="option-draggable">
-                    <img
-                      src="/assets/draghandle.svg"
-                      alt=""
-                      class="drag-icon {{ option.error ? 'error' : '' }}"
-                    />
-                    <input
-                      type="text"
-                      class="option-input {{ option.error ? 'error' : '' }}"
-                      (input)="onOptionChange($event, option)"
-                      [value]="option.text"
-                    />
-                    <div
-                      class="delete-wrapper"
-                      (mousedown)="onRemoveOption(token, option)"
-                    >
-                      <i class="fa fa-trash"></i>
-                    </div>
-                  </div>
-                  <div class="error-text" *ngIf="option.error">
-                    {{ option.error }}
+          class="question-input"
+          contenteditable="plaintext-only"
+          (input)="onChangeQuestion($event)"
+          (blur)="onBlurQuestion($event)"
+          (focus)="onFocusQuestion($event)"
+          [innerHTML]="questionTitleHTML"
+        ></div>
+      </div>
+      <div
+        class="answer-choices {{ question.question !== '' ? '' : 'disabled' }}"
+      >
+        <div class="helper-text bold">Answer Choices*</div>
+        <div class="tokens">
+          <div class="token" *ngFor="let token of question.tokens">
+            <div class="helper-text">{{ token.title }}*</div>
+            <div class="options">
+              <div class="option" *ngFor="let option of token.options">
+                <div class="option-draggable">
+                  <img
+                    src="/assets/draghandle.svg"
+                    alt=""
+                    class="drag-icon {{ option.error ? 'error' : '' }}"
+                  />
+                  <input
+                    type="text"
+                    class="option-input {{ option.error ? 'error' : '' }}"
+                    (input)="onOptionChange($event, option)"
+                    [value]="option.text"
+                  />
+                  <div
+                    class="delete-wrapper"
+                    (mousedown)="onRemoveOption(token, option)"
+                  >
+                    <i class="fa fa-trash"></i>
                   </div>
                 </div>
-              </div>
-              <div class="add-option">
-                <button class="btn-add-option" (click)="onAddOption(token)">
-                  Add option
-                </button>
+                <div class="error-text" *ngIf="option.error">
+                  {{ option.error }}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div
-          class="correct-answers {{
-            question.question !== '' ? '' : 'disabled'
-          }}"
-        >
-          <div class="helper-text bold">Set Correct Answers*</div>
-          <div class="answers-container">
-            <div class="helper-text bold" *ngIf="question.tokens.length < 1">
-              No tokens have been added yet
-            </div>
-            <div
-              class="answer"
-              *ngFor="let token of question.tokens; let i = index"
-            >
-              <div class="answer-token">Token {{ token.id }}</div>
-              <select class="{{ token.options | foundemptytokens }}">
-                <option value="" disabled selected>Select</option>
-                <option
-                  *ngFor="let option of token.options"
-                  [value]="option.id"
-                >
-                  {{ option.text }}
-                </option>
-              </select>
+            <div class="add-option">
+              <button class="btn-add-option" (click)="onAddOption(token)">
+                Add option
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="dropdown-container">
-      <div class="dropdown-header" (click)="toggleSetPropertiesDropdown()">
-        <div class="dropdown-title">Set Properties</div>
-        <i
-          class="fa {{
-            setPropertiesDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'
-          }} "
-        ></i>
-      </div>
-      <div class="dropdown-body" *ngIf="setPropertiesDropdownOpen">
-        <div
-          class="dropdown-container skyblue"
-          *ngFor="let token of question.tokens"
-        >
-          <div class="dropdown-header" (click)="token.open = !token.open">
-            <div class="dropdown-title">Token {{ token.id }}</div>
-            <i
-              class="fa {{ token.open ? 'fa-chevron-up' : 'fa-chevron-down' }}"
-            ></i>
+      <div
+        class="correct-answers {{ question.question !== '' ? '' : 'disabled' }}"
+      >
+        <div class="helper-text bold">Set Correct Answers*</div>
+        <div class="answers-container">
+          <div class="helper-text bold" *ngIf="question.tokens.length < 1">
+            No tokens have been added yet
           </div>
-          <div class="dropdown-body" *ngIf="token.open">
-            <div class="helper-text">Settings for Answer Field</div>
-            <div class="dimentions">
-              <div class="">Width(px):</div>
-              <input type="number" [value]="token.width" />
-              <div class="">Height(px):</div>
-              <input type="number" [value]="token.height" />
-            </div>
+          <div
+            class="answer"
+            *ngFor="let token of question.tokens; let i = index"
+          >
+            <div class="answer-token">Token {{ token.id }}</div>
+            <select class="{{ token.options | foundemptytokens }}">
+              <option value="" disabled selected>Select</option>
+              <option *ngFor="let option of token.options" [value]="option.id">
+                {{ option.text }}
+              </option>
+            </select>
           </div>
         </div>
       </div>
     </div>
-    <div class="dropdown-container">
-      <div class="dropdown-header" (click)="toggleFeedbackDropdown()">
-        <div class="dropdown-title dropdown-title-small">ADD FEEDBACK</div>
-      </div>
-      <div class="dropdown-body feedback-form" *ngIf="feedbackDropdownOpen">
-        <div class="helper-text">Feedback for all correct responses</div>
-        <input
-          type="text"
-          placeholder="Enter feedback for all correct responses"
-          [value]="question.feedback.correct"
-        />
-        <div class="helper-text">Feedback for partially correct responses</div>
-        <input
-          type="text"
-          placeholder="Almost there! Give it another go."
-          [value]="question.feedback.partial"
-        />
-        <div class="helper-text">Feedback for incorrect responses</div>
-        <input
-          type="text"
-          placeholder="Enter feedback for incorrect responses"
-          [value]="question.feedback.incorrect"
-        />
+  </div>
+  <div class="dropdown-container">
+    <div class="dropdown-header" (click)="toggleSetPropertiesDropdown()">
+      <div class="dropdown-title">Set Properties</div>
+      <i
+        class="fa {{
+          setPropertiesDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'
+        }} "
+      ></i>
+    </div>
+    <div class="dropdown-body" *ngIf="setPropertiesDropdownOpen">
+      <div
+        class="dropdown-container skyblue"
+        *ngFor="let token of question.tokens"
+      >
+        <div class="dropdown-header" (click)="token.open = !token.open">
+          <div class="dropdown-title">Token {{ token.id }}</div>
+          <i
+            class="fa {{ token.open ? 'fa-chevron-up' : 'fa-chevron-down' }}"
+          ></i>
+        </div>
+        <div class="dropdown-body" *ngIf="token.open">
+          <div class="helper-text">Settings for Answer Field</div>
+          <div class="dimentions">
+            <div class="">Width(px):</div>
+            <input type="number" [value]="token.width" />
+            <div class="">Height(px):</div>
+            <input type="number" [value]="token.height" />
+          </div>
+        </div>
       </div>
     </div>
-  </main>
-  <footer class="footer">
-    <button>Previous</button>
-  </footer>
-</div>
+  </div>
+  <div class="dropdown-container">
+    <div class="dropdown-header" (click)="toggleFeedbackDropdown()">
+      <div class="dropdown-title dropdown-title-small">ADD FEEDBACK</div>
+    </div>
+    <div class="dropdown-body feedback-form" *ngIf="feedbackDropdownOpen">
+      <div class="helper-text">Feedback for all correct responses</div>
+      <input
+        type="text"
+        placeholder="Enter feedback for all correct responses"
+        [value]="question.feedback.correct"
+      />
+      <div class="helper-text">Feedback for partially correct responses</div>
+      <input
+        type="text"
+        placeholder="Almost there! Give it another go."
+        [value]="question.feedback.partial"
+      />
+      <div class="helper-text">Feedback for incorrect responses</div>
+      <input
+        type="text"
+        placeholder="Enter feedback for incorrect responses"
+        [value]="question.feedback.incorrect"
+      />
+    </div>
+  </div>
+</main>
+<footer class="footer">
+  <button>Previous</button>
+</footer>

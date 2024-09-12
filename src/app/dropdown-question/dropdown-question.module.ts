@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 
-import { DropdownQuestionComponent } from './dropdown-question.component';
-import { SharedModule } from '../shared/shared.module';
 import { CommonModule } from '@angular/common';
+import { SharedModule } from '../shared/shared.module';
+import { DropdownQuestionComponent } from './dropdown-question.component';
+import { QuestionPreviewComponent } from './question-preview/question-preview.component';
 
 @NgModule({
   imports: [CommonModule, SharedModule],
-  declarations: [DropdownQuestionComponent],
+  declarations: [DropdownQuestionComponent, QuestionPreviewComponent],
   exports: [DropdownQuestionComponent],
 })
 export class DropdownQuestionModule {}

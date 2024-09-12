@@ -1,0 +1,36 @@
+.bg-white {
+  flex-grow: 1;
+  background-color: #ffffff;
+  .header {
+    background-color: #feca56;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 24px;
+    box-shadow: 0px 3px 6px #00000029;
+    margin-bottom: 20px;
+
+    .title-sm {
+      font-size: 12px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .btn-exit {
+      font-size: 12px;
+      font-weight: 500;
+      background: transparent linear-gradient(0deg, #57b9fe 0%, #61e8ff 100%) 0%
+        0% no-repeat padding-box;
+      box-shadow: 0px 3px 5px #0000003d;
+      border: none;
+      outline: none;
+      border-radius: 18px;
+      padding: 10px 18px;
+
+      &:hover {
+        cursor: pointer;
+        scale: 1.04;
+      }
+    }
+  }
+}
