@@ -113,7 +113,10 @@
             *ngFor="let token of question.tokens; let i = index"
           >
             <div class="answer-token">Token {{ token.id }}</div>
-            <select class="{{ token.options | foundemptytokens }}">
+            <select
+              class="{{ token.options | foundemptytokens }}"
+              (change)="onAnswerChange($event, token)"
+            >
               <option value="" disabled selected>Select</option>
               <option *ngFor="let option of token.options" [value]="option.id">
                 {{ option.text }}

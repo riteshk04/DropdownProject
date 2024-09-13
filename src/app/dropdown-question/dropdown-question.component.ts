@@ -159,8 +159,8 @@ export class DropdownQuestionComponent {
               error: undefined,
             },
           ],
-          width: 200,
-          height: 32,
+          width: 96,
+          height: 28,
           correct: -1,
           open: false,
         });
@@ -200,5 +200,9 @@ export class DropdownQuestionComponent {
       correct: 0,
       open: false,
     });
+  }
+
+  onAnswerChange(event: any, token: IToken) {
+    token.correct = Number(event.target.value);
   }
 }

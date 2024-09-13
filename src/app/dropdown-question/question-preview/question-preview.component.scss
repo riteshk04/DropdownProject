@@ -33,4 +33,14 @@
       }
     }
   }
+  .container {
+    padding: 0 24px;
+    min-height: calc(100vh - 140px);
+
+    .question {
+      font-size: large;
+      font-weight: 600;
+      color: #000;
+    }
+  }
 }
