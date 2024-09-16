@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/core/data.service';
@@ -20,6 +20,13 @@ export class QuestionPreviewComponent implements OnInit {
     },
   };
   questionMarkup: SafeHtml = '';
+  answerChecked = false;
+  answerShown = false;
+  correctAnswers: string[] = [];
+  generatedSelectTags: HTMLSelectElement[] = [];
+  error?: string;
+
+  @ViewChild('questionRef', { static: true }) questionDiv!: HTMLDivElement;
 
   constructor(
     private dataService: DataService,
@@ -36,39 +43,88 @@ export class QuestionPreviewComponent implements OnInit {
       } else {
         this.question = data.find((q) => q.id === id) || this.question;
         this.questionMarkup = this.sanitizer.bypassSecurityTrustHtml(
-          this.generateMarkup()
+          this.generateMarkup(true, this.questionDiv)
         );
       }
     });
   }
 
-  generateMarkup() {
-    let markup = '';
+  generateMarkup(active = true, target: any = this.questionDiv) {
+    let spanarr = this.question.question.split(/\[([^\]]+)\]/g);
+    let tokens = this.question.tokens;
 
-    let title =
-      'Q.1: ' +
-      this.question.question.replace(/\[([^\]]+)\]/g, `<select></select>`);
+    const parentDiv = document.createElement('div');
 
-    let parsedHtml = new DOMParser().parseFromString(title, 'text/html');
-    let selects = parsedHtml.querySelectorAll('select');
+    for (let i = 0, j = 0; i < spanarr.length; i++) {
+      if (i % 2 !== 0) {
+        const select = document.createElement('select');
+        select.classList.add('select-answer');
+        select.style.width = tokens[j].width + 'px';
+        select.style.height = tokens[j].height + 'px';
+        this.generatedSelectTags.push(select);
+        const options = tokens[j++].options;
 
-    for (let i = 0; i < selects.length; i++) {
-      const element = selects[i];
-      element.style.height = this.question.tokens[i].height + 'px';
-      element.style.width = this.question.tokens[i].width + 'px';
-    }
+        const option = document.createElement('option');
+        option.value = '';
+        option.innerText = '--Select--';
+        select.appendChild(option);
 
-    for (let i = 0; i < selects.length; i++) {
-      let options = this.question.tokens[i].options;
-      for (let j = 0; j < options.length; j++) {
-        let option = document.createElement('option');
-        option.value = options[j].text;
-        option.text = options[j].text;
-        selects[i].appendChild(option);
+        for (let k = 0; k < options.length; k++) {
+          const option = document.createElement('option');
+          option.value = options[k].id + '';
+          option.innerText = options[k].text;
+          select.appendChild(option);
+        }
+        parentDiv.appendChild(select);
+      } else {
+        const span = document.createElement('span');
+        span.innerText = spanarr[i];
+        parentDiv.appendChild(span);
       }
     }
-    markup = parsedHtml.body.innerHTML;
 
-    return markup;
+    target.nativeElement.appendChild(parentDiv);
+    return '';
+  }
+
+  onAnswerCheck() {
+    let valid = true;
+    for (let i = 0; i < this.generatedSelectTags.length; i++) {
+      if (this.generatedSelectTags[i].value.trim() === '') {
+        valid = false;
+        this.generatedSelectTags[i].style.borderColor = 'red';
+      } else {
+        this.generatedSelectTags[i].style.borderColor = 'black';
+      }
+    }
+    if (!valid) {
+      this.error = 'Please select an answer';
+      return;
+    } else {
+      this.error = undefined;
+    }
+    this.answerChecked = !this.answerChecked;
+    this.updateUI(this.answerChecked);
+  }
+
+  showAnswer() {
+    this.answerShown = !this.answerShown;
+    this.generateCorrectAnswers();
+  }
+
+  updateUI(active = false) {
+    // this.questionMarkup = this.sanitizer.bypassSecurityTrustHtml(
+    //   this.generateMarkup(active)
+    // );
+  }
+
+  generateCorrectAnswers() {
+    for (let i = 0; i < this.question.tokens.length; i++) {
+      this.correctAnswers.push(
+        this.question.tokens[i].options.find(
+          (o) => o.id === this.question.tokens[i].correct
+        )!.text
+      );
+    }
   }
 }

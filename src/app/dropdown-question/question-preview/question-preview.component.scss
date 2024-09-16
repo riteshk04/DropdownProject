@@ -1,3 +1,5 @@
+$sky-light: #e2f8fe;
+
 .bg-white {
   flex-grow: 1;
   background-color: #ffffff;
@@ -15,32 +17,92 @@
       font-weight: 600;
       color: #000;
     }
-
-    .btn-exit {
-      font-size: 12px;
-      font-weight: 500;
-      background: transparent linear-gradient(0deg, #57b9fe 0%, #61e8ff 100%) 0%
-        0% no-repeat padding-box;
-      box-shadow: 0px 3px 5px #0000003d;
-      border: none;
-      outline: none;
-      border-radius: 18px;
-      padding: 10px 18px;
-
-      &:hover {
-        cursor: pointer;
-        scale: 1.04;
-      }
-    }
   }
   .container {
     padding: 0 24px;
-    min-height: calc(100vh - 140px);
+    // min-height: calc(100vh - 140px);
 
     .question {
       font-size: large;
       font-weight: 600;
       color: #000;
     }
+    .error {
+      color: red;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+  }
+  .validation-container {
+    margin-top: 10px;
+    padding: 20px 24px;
+    button {
+      margin-left: 24px;
+    }
+  }
+  .correct-answer {
+    padding: 20px 24px;
+    font-weight: 600;
+    .bg-sky {
+      margin-top: 14px;
+      background-color: #e0f0ff;
+      padding: 16px 24px;
+      border-radius: 5px;
+    }
+  }
+}
+::ng-deep .select-wrapper {
+  display: inline-flex;
+  justify-content: center;
+
+  &.shown {
+    border: 1px solid;
+    pointer-events: none;
+  }
+
+  span.select-label {
+    display: none;
+    padding: 0 8px;
+    align-content: center;
+
+    &.shown {
+      display: block;
+    }
+  }
+  span.select-icon {
+    display: none;
+    padding: 0 4px;
+
+    &.shown {
+      display: block;
+    }
+  }
+
+  select.select-answer.shown {
+    border: none;
+    outline: none;
+  }
+}
+.btn-sky {
+  font-size: 12px;
+  font-weight: 500;
+  background: transparent linear-gradient(0deg, #57b9fe 0%, #61e8ff 100%) 0% 0%
+    no-repeat padding-box;
+  box-shadow: 0px 3px 5px #0000003d;
+  border: none;
+  outline: none;
+  border-radius: 18px;
+  padding: 10px 18px;
+
+  &:hover {
+    cursor: pointer;
+    scale: 1.04;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
   }
 }
