@@ -4,7 +4,10 @@
     <button class="btn-sky" onclick="window.close()">EXIT PREVIEW</button>
   </div>
   <div class="container">
-    <div class="question" #questionRef></div>
+    <div class="question-preview">
+      <div class="question-count">Q {{ question.id + 1 }}.</div>
+      <div class="question" #questionRef></div>
+    </div>
     <div class="error" *ngIf="error">{{ error }}</div>
   </div>
   <div class="validation-container">

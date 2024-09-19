@@ -146,7 +146,7 @@ export class QuestionPreviewComponent implements OnInit {
 
   showAnswer() {
     this.answerShown = !this.answerShown;
-    this.onAnswerCheck();
+    this.highlightAnswers(this.answerShown);
   }
 
   highlightAnswers(active = false) {
@@ -179,6 +179,9 @@ export class QuestionPreviewComponent implements OnInit {
       }
       if (!active) {
         selectElement.style.borderColor = 'black';
+        selectElement.classList.remove('disabled');
+      }else{
+        selectElement.classList.add('disabled');
       }
     }
   }
