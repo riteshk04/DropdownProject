@@ -23,7 +23,7 @@ export class QuestionPreviewComponent implements OnInit {
   answerChecked = false;
   answerShown = false;
   correctAnswers: string[] = [];
-  generatedSelectTags: HTMLSelectElement[] = [];
+  generatedSelectWrappers: HTMLSpanElement[] = [];
   error?: string;
 
   @ViewChild('questionRef', { static: true }) questionDiv!: HTMLDivElement;
@@ -42,6 +42,7 @@ export class QuestionPreviewComponent implements OnInit {
         this.router.navigate(['/question/new']);
       } else {
         this.question = data.find((q) => q.id === id) || this.question;
+        this.generateCorrectAnswers();
         this.questionMarkup = this.sanitizer.bypassSecurityTrustHtml(
           this.generateMarkup(true, this.questionDiv)
         );
@@ -54,14 +55,41 @@ export class QuestionPreviewComponent implements OnInit {
     let tokens = this.question.tokens;
 
     const parentDiv = document.createElement('div');
+    parentDiv.style.display = 'flex';
+    parentDiv.style.flexWrap = 'wrap';
+    parentDiv.style.alignItems = 'center';
+    parentDiv.style.rowGap = '10px';
+    parentDiv.style.columnGap = '6px';
 
     for (let i = 0, j = 0; i < spanarr.length; i++) {
       if (i % 2 !== 0) {
+        const selectWrapper = document.createElement('span');
+        selectWrapper.style.height = tokens[j].height + 'px';
+        selectWrapper.style.display = 'inline-flex';
+        parentDiv.appendChild(selectWrapper);
+
+        const answerLabel = document.createElement('label');
+        answerLabel.innerText = j + 1 + '';
+        answerLabel.style.padding = '4px';
+        answerLabel.style.border = '1px solid black';
+        answerLabel.style.borderRight = 'none';
+
+        selectWrapper.appendChild(answerLabel);
+
+        const answerIcon = document.createElement('i');
+        answerIcon.classList.add('fa');
+        answerIcon.style.backgroundColor = 'green';
+        answerIcon.style.color = 'white';
+        answerIcon.style.padding = '4px';
+
         const select = document.createElement('select');
         select.classList.add('select-answer');
         select.style.width = tokens[j].width + 'px';
         select.style.height = tokens[j].height + 'px';
-        this.generatedSelectTags.push(select);
+        select.style.borderRadius = '0px';
+        select.style.outline = 'none';
+
+        this.generatedSelectWrappers.push(selectWrapper);
         const options = tokens[j++].options;
 
         const option = document.createElement('option');
@@ -71,11 +99,14 @@ export class QuestionPreviewComponent implements OnInit {
 
         for (let k = 0; k < options.length; k++) {
           const option = document.createElement('option');
-          option.value = options[k].id + '';
+          option.value = options[k].text;
           option.innerText = options[k].text;
           select.appendChild(option);
         }
-        parentDiv.appendChild(select);
+        selectWrapper.appendChild(select);
+        selectWrapper.appendChild(answerIcon);
+        answerIcon.style.display = 'none';
+        answerLabel.style.display = 'none';
       } else {
         const span = document.createElement('span');
         span.innerText = spanarr[i];
@@ -89,12 +120,18 @@ export class QuestionPreviewComponent implements OnInit {
 
   onAnswerCheck() {
     let valid = true;
-    for (let i = 0; i < this.generatedSelectTags.length; i++) {
-      if (this.generatedSelectTags[i].value.trim() === '') {
+    for (let i = 0; i < this.generatedSelectWrappers.length; i++) {
+      const selectElement =
+        this.generatedSelectWrappers[i].querySelector('select');
+      if (!selectElement) {
         valid = false;
-        this.generatedSelectTags[i].style.borderColor = 'red';
+        break;
+      }
+      if (selectElement.value.trim() === '') {
+        valid = false;
+        selectElement.style.borderColor = 'red';
       } else {
-        this.generatedSelectTags[i].style.borderColor = 'black';
+        selectElement.style.borderColor = 'black';
       }
     }
     if (!valid) {
@@ -104,18 +141,46 @@ export class QuestionPreviewComponent implements OnInit {
       this.error = undefined;
     }
     this.answerChecked = !this.answerChecked;
-    this.updateUI(this.answerChecked);
+    this.highlightAnswers(this.answerChecked);
   }
 
   showAnswer() {
     this.answerShown = !this.answerShown;
-    this.generateCorrectAnswers();
+    this.onAnswerCheck();
   }
 
-  updateUI(active = false) {
-    // this.questionMarkup = this.sanitizer.bypassSecurityTrustHtml(
-    //   this.generateMarkup(active)
-    // );
+  highlightAnswers(active = false) {
+    for (let i = 0; i < this.generatedSelectWrappers.length; i++) {
+      const selectElement =
+        this.generatedSelectWrappers[i].querySelector('select');
+      const selectWrapper = this.generatedSelectWrappers[i];
+      if (!selectElement) {
+        continue;
+      }
+      const answerLabel = selectWrapper.querySelector('label')!;
+      answerLabel.style.display = active ? 'inline-block' : 'none';
+      answerLabel.style.alignContent = 'center';
+
+      const answerIcon = selectWrapper.querySelector('i')!;
+      answerIcon.style.display = active ? 'inline-block' : 'none';
+
+      if (selectElement.value.trim() === this.correctAnswers[i].trim()) {
+        answerLabel.style.borderColor = 'green';
+        selectElement.style.borderColor = 'green';
+        answerIcon.style.backgroundColor = 'green';
+        answerIcon.classList.remove('fa-times');
+        answerIcon.classList.add('fa-check');
+      } else {
+        selectElement.style.borderColor = 'red';
+        answerLabel.style.borderColor = 'red';
+        answerIcon.style.backgroundColor = 'red';
+        answerIcon.classList.add('fa-times');
+        answerIcon.classList.remove('fa-check');
+      }
+      if (!active) {
+        selectElement.style.borderColor = 'black';
+      }
+    }
   }
 
   generateCorrectAnswers() {
